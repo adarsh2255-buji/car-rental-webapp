@@ -35,7 +35,7 @@ export const carBooking = async (req, res) =>{
             //total price
             const totalPrice = calculateTotalPrice(bookedCar.pricePerDay, pickUpDateAndTime, dropOffDateAndTime)
             //create booking
-            const booking = new Booking(
+            const booking = new Booking({
                 user,
                 car,
                 pickUpLocation,
@@ -43,7 +43,7 @@ export const carBooking = async (req, res) =>{
                 dropOffLocation,
                 dropOffDateAndTime,
                 totalPrice
-            )
+    })
 
             await booking.save();
 
