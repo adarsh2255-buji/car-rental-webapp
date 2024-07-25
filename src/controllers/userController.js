@@ -5,12 +5,13 @@ import bcrypt from 'bcrypt'
 //USER REGISTRATION
 const userRegister = async (req, res) => {
     try {
-        const { username, email, password} = req.body;
+        const { username, email, password, phone, address} = req.body;
         const existingUser = await User.findOne({ email });
 
         //check for existing user
         if(existingUser){
             res.status(401).json({ message : "user already exists"});
+            return;
         }
 
         //password hashing
@@ -21,13 +22,17 @@ const userRegister = async (req, res) => {
         const user = await User.create({
             username, 
             email,
+            phone,
+            address,
             password : hashedPassword
         })
 
         res.status(201).json({ message : "User registration successfully"})
+        return;
 
     } catch (error) {
         res.status(500).json({ message :"Server error", error})
+        return;
     }
 };
 
@@ -68,6 +73,25 @@ const userRegister = async (req, res) => {
        }
     }
 
+
+    //GET USER PROFILE
+    const getUserProfile = async(req, res)=> {
+    try {
+        const user = {
+            userId : req.user._id,
+            username : req.user.username,
+            email : req.user.email,
+            phone : req.user.phone,
+            address : req.user.address,
+        }
+        res.status(200).json(user)
+        return;
+    } catch (error) {
+        res.status(500).json({message : "Internal server error", error})
+        return;
+    }
+}
+
 // USER SIGNOUT
 
 const userSignOut = async(req, res) =>{
@@ -76,22 +100,10 @@ const userSignOut = async(req, res) =>{
         expires : new Date(0)
     })
     res.status(200).json({ message : "User signed out successfully"})
+    return;
 }
 
-//GET USER PROFILE
 
-const getUserProfile = async(req, res)=> {
-    try {
-        const user = {
-            userId : req.user._id,
-            username : req.user.username,
-            email : req.user.email
-        }
-        res.status(200).json(user)
-    } catch (error) {
-        res.status(500).json({message : "Internal server error", error})
-    }
-}
   
 export default {userRegister,
     userSignIn,userSignOut,

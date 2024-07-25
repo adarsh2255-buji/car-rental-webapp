@@ -9,3 +9,4 @@ router.post('/signout', userController.userSignOut);
 router.get('/profile',protect, userController.getUserProfile);
 
 export default router;
+ 
