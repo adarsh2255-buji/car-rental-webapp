@@ -25,11 +25,11 @@ export const carBooking = async (req, res) =>{
             //car availablity
             const bookedCar = await Car.findById(car);
             if(!bookedCar){
-                res.status(404).json({ message : "Car not found"})
+               return res.status(404).json({ message : "Car not found"})
             }
 
             if(!bookedCar.availability){
-                res.status(404).json({ message : "Car is not available"})
+               return res.status(404).json({ message : "Car is not available"})
             }
 
             //total price
@@ -50,8 +50,9 @@ export const carBooking = async (req, res) =>{
             //update car availability
             bookedCar.availability = false;
             await bookedCar.save()
-
-            res.status(201).json({ message : "Car booked successfully", booking})
+ 
+            return res.status(201).json({ message : "Car booked successfully", booking})
+            
             
     } catch (error) {
         console.log(error)
@@ -59,3 +60,30 @@ export const carBooking = async (req, res) =>{
     }
 }
 
+
+//get booking by ID
+
+export const carBookingById  = async(req, res) =>{
+    try {
+        const { id } = req.params;
+        const booking = await Booking.findById(id).populate('user').populate('car');
+
+        if(!booking) {
+            return res.status(404).json({ message : "Booking not found"})
+        }
+        res.status(200).json(booking)
+    } catch (error) {
+        return res.status(500).json({ message : "Server error"})
+    }
+}
+
+
+//get all booking
+export const getAllCarBooking = async(req, res) =>{
+    try {
+        const booking = await Booking.find().populate('user').populate('car');
+        res.status(404).json({ booking })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
