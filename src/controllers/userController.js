@@ -24,15 +24,16 @@ const userRegister = async (req, res) => {
             email,
             phone,
             address,
-            password : hashedPassword
+            password : hashedPassword,
+            isAdmin : User.isAdmin
         })
 
-        res.status(201).json({ message : "User registration successfully"})
-        return;
+        return res.status(201).json({ message : "User registration successfully"});
 
     } catch (error) {
-        res.status(500).json({ message :"Server error", error})
-        return;
+        console.log(error)
+        return res.status(500).json({ message :"Server error", error})
+        
     }
 };
 
@@ -53,8 +54,9 @@ const userRegister = async (req, res) => {
             const token = jwt.sign({
                 userId : user._id,
                 username : user.username,
-                email : user.email
-            }, process.env.JWT_SECRET, { expiresIn: '1h'});
+                email : user.email,
+                isAdmin : user.isAdmin
+            }, process.env.JWT_SECRET, { expiresIn: '24h'});
 
             // set token as cookie
             res.cookie('token', token, {
@@ -62,7 +64,11 @@ const userRegister = async (req, res) => {
                 secure : process.env.NODE_ENV,
                 maxAge : 30 * 24 * 60 * 60 * 1000
             })
-            res.status(201).json({ message : "user logged in successfully", token})
+            res.status(201).json({ message : "user logged in successfully", token, 
+                userId : user._id,
+                username : user.username,
+                email : user.email,
+                isAdmin : user.isAdmin})
             return;
         } else{
             res.status(401).json({ message : "Invalide password" })
