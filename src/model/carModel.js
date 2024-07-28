@@ -10,9 +10,7 @@ const carSchema = mongoose.Schema({
     seater : {type : Number, required : true},
     image : {type : String, required : true},
     pricePerDay : {type : Number, required : true},
-    location : {type : mongoose.Schema.Types.ObjectId, ref : 'Location'},
     availability : {type : Boolean, default : true},
-    status : {type : String, default : 'Booked'},
 }, { timestamps : true });
 
 const Car = mongoose.model("Car", carSchema);
