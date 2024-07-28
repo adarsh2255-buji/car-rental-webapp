@@ -12,7 +12,6 @@ export const createCar = async (req, res) =>{
             kmPerDay, 
             seater, 
             pricePerDay, 
-            location
         } = req.body;
         // const image = req.file.path;
 
@@ -26,7 +25,6 @@ export const createCar = async (req, res) =>{
             kmPerDay,
             seater,
             pricePerDay,
-            location,
             availability : true
         })
 
@@ -51,4 +49,4 @@ export const getCarById = async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
-}
+} 
