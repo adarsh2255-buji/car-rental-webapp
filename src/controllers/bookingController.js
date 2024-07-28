@@ -104,10 +104,14 @@ export const cancelBooking = async (req, res) =>{
         await booking.save();
 
         //update car availability
-        booking.car.availability = true;
+        const car = await Car.findById(booking.car._id);
+        if(car) {
+            car.availability = true;
+            await car.save()
+        }
         return res.status(200).json({ message : 'Booking cancelled successfully', booking})
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error", error });
     }
-}
+} 
